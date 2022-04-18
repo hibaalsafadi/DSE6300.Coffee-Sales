@@ -18,14 +18,18 @@ def read_in_data(user):
         .getOrCreate()
     spark.conf.set("spark.sql.repl.eagerEval.enabled", True)
 
-    df = spark.read \
-        .format("jdbc") \
-        .option("url", "jdbc:postgresql://localhost:5432/dse6300") \
-        .option("dbtable", "sale_transactions") \
-        .option("user", "postgres") \
-        .option("password", "pass1234") \
-        .option("driver", "org.postgresql.Driver") \
-        .load()
+    # df = spark.read \
+    #     .format("jdbc") \
+    #     .option("url", "jdbc:postgresql://localhost:5432/dse6300") \
+    #     .option("dbtable", "sale_transactions") \
+    #     .option("user", "postgres") \
+    #     .option("password", "pass1234") \
+    #     .option("driver", "org.postgresql.Driver") \
+    #     .load()
+    #TODO Hiba change the path string below to that of the csv on your local machine
+    #until we fix your db issues
+    df = spark.read.csv('/content/authors.csv', sep=',',
+                             inferSchema=True, header=True)
 
     df = df.where(df.transaction_id != 'transaction_id')
     df.describe().toPandas().transpose()
