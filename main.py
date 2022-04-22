@@ -20,7 +20,7 @@ def read_in_data(user):
 
     df = spark.read \
         .format("jdbc") \
-        .option("url", "jdbc:postgresql://127.0.0.1:5432/dse6300") \
+        .option("url", "jdbc:postgresql://host.docker.internal:5432/dse6300") \
         .option("dbtable", "sale_transactions") \
         .option("user", "postgres") \
         .option("password", "pass1234") \
