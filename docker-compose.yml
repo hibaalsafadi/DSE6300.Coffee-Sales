@@ -1,11 +1,61 @@
-version: "3.9"
-
+version: '2'
+networks:
+  dse_kafka:
+    name: dse_kafka
 services:
-  db:
-    image: postgres
-    volumes:
-      - ./data/db:/var/lib/postgresql/data
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    platform: linux/amd64
+    networks:
+      - dse_kafka
     environment:
-      - POSTGRES_DB=dse6300
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=pass1234
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - 22181:2181
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    platform: linux/amd64
+    depends_on:
+      - zookeeper
+    networks:
+      - dse_kafka
+    ports:
+      - 9092:9092
+    hostname: kafka
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
+      KAFKA_LISTENERS: PLAINTEXT://:9092
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+  kafka-consumer:
+    image: kafkaconsumer
+    depends_on:
+      - kafka
+    networks:
+      - dse_kafka
+    entrypoint:
+      - bash
+      - -c
+      - |
+        echo 'Giving Kafka a bit of time to start up…'
+        sleep 60
+        # Run the client code
+        python kafkaConsumer.py
+  dse6300:
+    image: dse6300
+    depends_on:
+      - kafka
+    networks:
+      - dse_kafka
+    entrypoint:
+      - bash
+      - -c
+      - |
+        echo 'Giving Kafka & Consumer a bit of time to start up…'
+        sleep 90
+        python main.py

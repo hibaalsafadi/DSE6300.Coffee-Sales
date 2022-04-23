@@ -1,13 +1,10 @@
 from pyspark.sql import SparkSession
-import pandas as pd
-from pyspark.sql import functions as f
-
 from transactionAnalysis import *
 
 
 def read_in_data(user):
     # TODO update path to jar location on machine/ password for db
-    # pathJar = "/Users/allison/Drivers/postgresql-42.3.4.jar"
+    pathJar = "/Users/allison/Drivers/postgresql-42.3.4.jar"
     # if user:
     #     pathJar = "TODO: hiba path"
 

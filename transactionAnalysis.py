@@ -1,7 +1,17 @@
 from pyspark.sql import functions as f
+from kafka import KafkaProducer
 from pyspark.ml.fpm import FPGrowth
 import matplotlib.pyplot as plt
 import numpy as np
+import json
+
+
+def createProducer():
+    producer = KafkaProducer(
+        bootstrap_servers='kafka:9092',
+        value_serializer=lambda v: json.dumps(v).encode('utf-8'))
+    return producer
+
 
 def run_fp_growth(sales_df):
     sales_df = sales_df.groupby("transaction_date_time", "sales_outlet_id", "transaction_id", "staff_id", "line_item_id"
@@ -13,10 +23,10 @@ def run_fp_growth(sales_df):
     model = fpGrowth.fit(sales_df)
     # Display frequent itemsets.
     model.freqItemsets.show()
-    items = model.freqItemsets
-    # transform examines the input items against all the association rules and summarize the consequents as prediction
+    items = model.freqItemsets.toPandas()
+    producer = createProducer()
+    producer.send('results', items.to_json())
     model.transform(sales_df).show()
-    transformed = model.transform(sales_df)
 
 
 def plotLineItemAmount(data_df):
