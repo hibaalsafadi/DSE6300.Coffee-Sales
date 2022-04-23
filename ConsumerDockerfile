@@ -1,0 +1,10 @@
+FROM python:3.7-slim
+
+RUN apt-get update
+RUN apt-get install default-jdk -y
+
+RUN pip install --no-cache-dir kafka-python
+
+COPY kafkaConsumer.py ./
+
+CMD [ "python", "./kafkaConsumer.py"]

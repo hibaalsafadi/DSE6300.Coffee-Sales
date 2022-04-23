@@ -7,7 +7,7 @@ RUN apt-get install default-jdk -y
 
 ADD https://jdbc.postgresql.org/download/postgresql-42.2.5.jar /opt/spark/jars
 
-RUN pip install --no-cache-dir matplotlib pandas numpy pyspark
+RUN pip install --no-cache-dir matplotlib pandas numpy pyspark kafka-python
 
 COPY main.py ./
 COPY transactionAnalysis.py ./
