@@ -1,13 +1,10 @@
 from pyspark.sql import SparkSession
 from transactionAnalysis import *
 from ApiriorAlgorithim import *
+import pandas as p
 
-def read_in_data(user):
-    # TODO update path to jar location on machine/ password for db
-    pathJar = "/Users/allison/Drivers/postgresql-42.3.4.jar"
-    # if user:
-    #     pathJar = "TODO: hiba path"
 
+def read_in_data():
     spark = SparkSession \
         .builder \
         .appName("Coffee Sales") \
@@ -34,6 +31,7 @@ def read_in_data(user):
                                                                                  'yyyy-MM-dd HH:mm:ss')))
     df = df.dropna(how='any')
     df = df.dropDuplicates()
+    pd.set_option('max_columns', None)
     df.printSchema()
     print(df.describe().toPandas().transpose())
     return df
