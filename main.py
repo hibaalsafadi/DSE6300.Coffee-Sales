@@ -13,7 +13,6 @@ def createProducer():
     return producer
 
 
-
 def read_in_data():
     spark = SparkSession \
         .builder \
@@ -44,12 +43,14 @@ def read_in_data():
     pd.set_option('max_columns', None)
     df.printSchema()
     print(df.describe().toPandas().transpose())
+    # print(df.toPandas().corr())
     return df
 
 
 if __name__ == '__main__':
     data = read_in_data()
+    producer = createProducer()
     # Uncomment/ comment out algorithm to run
-    # run_fp_growth(data)
+    # run_fp_growth(data, producer)
     # plotLineItemAmount(data)
-    SR(data)
+    # SR(data, producer)

@@ -4,11 +4,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-
-def run_fp_growth(sales_df):
+def run_fp_growth(sales_df, producer):
     sales_df = sales_df.groupby("transaction_date_time", "sales_outlet_id", "transaction_id", "staff_id", "line_item_id"
-                                , "order")\
-        .agg(f.collect_list("product_id")).sort("transaction_date_time", "sales_outlet_id", "transaction_id", "staff_id",
+                                , "order") \
+        .agg(f.collect_list("product_id")).sort("transaction_date_time", "sales_outlet_id", "transaction_id",
+                                                "staff_id",
                                                 "line_item_id", "order")
     # Frequent Pattern Growth – FP Growth is a method of mining frequent itemsets using support, lift, and confidence.
     fpGrowth = FPGrowth(itemsCol="collect_list(product_id)", minSupport=0.015, minConfidence=0.001)
@@ -17,7 +17,6 @@ def run_fp_growth(sales_df):
     items = model.freqItemsets.toPandas()
     items.sort_values(by=['freq'], ascending=False)
     print(items.head(20))
-    producer = createProducer()
     producer.send('results', items.to_json())
     model.transform(sales_df).show()
 
@@ -29,7 +28,7 @@ def plotLineItemAmount(data_df):
     plt.bar(dates, values)
     plt.xticks(dates, rotation=45)
     labels, location = plt.yticks()
-    plt.yticks(labels, (labels/1000).astype(int))
+    plt.yticks(labels, (labels / 1000).astype(int))
     plt.ylabel('Sales in thousands USD')
     plt.title('Coffee Product Sales for April 2019')
     plt.xlabel('Date')

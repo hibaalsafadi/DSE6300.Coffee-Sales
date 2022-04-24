@@ -2,13 +2,13 @@ from mlxtend.frequent_patterns import apriori, association_rules
 
 
 def hot_encode(x):
-    if (x <= 0):
+    if x <= 0:
         return 0
-    if (x >= 1):
+    if x >= 1:
         return 1
 
 
-def SR(df):
+def SR(df, kafka_producer):
     df.show()
     df = df.toPandas()
     basket_3 = (df[df['sales_outlet_id'] == 3]
