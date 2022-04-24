@@ -1,16 +1,8 @@
 from pyspark.sql import functions as f
-from kafka import KafkaProducer
 from pyspark.ml.fpm import FPGrowth
 import matplotlib.pyplot as plt
 import numpy as np
-import json
 
-
-def createProducer():
-    producer = KafkaProducer(
-        bootstrap_servers='kafka:9092',
-        value_serializer=lambda v: json.dumps(v).encode('utf-8'))
-    return producer
 
 
 def run_fp_growth(sales_df):

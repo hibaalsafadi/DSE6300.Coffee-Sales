@@ -1,7 +1,17 @@
 from pyspark.sql import SparkSession
+from kafka import KafkaProducer
 from transactionAnalysis import *
 from ApiriorAlgorithim import *
-import pandas as p
+import pandas as pd
+import json
+
+
+def createProducer():
+    producer = KafkaProducer(
+        bootstrap_servers='kafka:9092',
+        value_serializer=lambda v: json.dumps(v).encode('utf-8'))
+    return producer
+
 
 
 def read_in_data():
@@ -40,6 +50,6 @@ def read_in_data():
 if __name__ == '__main__':
     data = read_in_data()
     # Uncomment/ comment out algorithm to run
-    run_fp_growth(data)
+    # run_fp_growth(data)
     # plotLineItemAmount(data)
     SR(data)
