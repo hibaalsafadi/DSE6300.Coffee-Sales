@@ -22,8 +22,9 @@ def run_fp_growth(sales_df):
     fpGrowth = FPGrowth(itemsCol="collect_list(product_id)", minSupport=0.015, minConfidence=0.001)
     model = fpGrowth.fit(sales_df)
     # Display frequent itemsets.
-    model.freqItemsets.show()
     items = model.freqItemsets.toPandas()
+    items.sort_values(by=['freq'], ascending=False)
+    print(items.head(20))
     producer = createProducer()
     producer.send('results', items.to_json())
     model.transform(sales_df).show()
