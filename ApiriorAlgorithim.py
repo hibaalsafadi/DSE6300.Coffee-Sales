@@ -24,7 +24,7 @@ def SR(df, kafka_producer):
     rules = rules.sort_values(['confidence', 'lift'], ascending=[False, False])
     print(rules.head())
     print(frq_items.head())
-
+    kafka_producer.send('results', frq_items.to_json())
     basket_5 = (df[df['sales_outlet_id'] == 5]
                 .groupby(['transaction_id', 'product_id'])['quantity']
                 .sum().unstack().reset_index().fillna(0)
@@ -38,7 +38,7 @@ def SR(df, kafka_producer):
     rules = rules.sort_values(['confidence', 'lift'], ascending=[False, False])
     print(rules.head())
     print(frq_items.head())
-
+    kafka_producer.send('results', frq_items.to_json())
     basket_8 = (df[df['sales_outlet_id'] == 8]
                 .groupby(['transaction_id', 'product_id'])['quantity']
                 .sum().unstack().reset_index().fillna(0)
@@ -52,4 +52,5 @@ def SR(df, kafka_producer):
     rules = rules.sort_values(['confidence', 'lift'], ascending=[False, False])
     print(rules.head())
     print(frq_items.head())
+    kafka_producer.send('results', frq_items.to_json())
 
