@@ -6,11 +6,11 @@ import pandas as pd
 import json
 
 
-def createProducer():
-    producer = KafkaProducer(
+def create_producer():
+    k_producer = KafkaProducer(
         bootstrap_servers='kafka:9092',
         value_serializer=lambda v: json.dumps(v).encode('utf-8'))
-    return producer
+    return k_producer
 
 
 def read_in_data():
@@ -49,8 +49,8 @@ def read_in_data():
 
 if __name__ == '__main__':
     data = read_in_data()
-    producer = createProducer()
+    producer = create_producer()
     # Uncomment/ comment out algorithm to run
-    # run_fp_growth(data, producer)
-    # plotLineItemAmount(data)
+    run_fp_growth(data, producer)
+    # plot_line_item_amount(data)
     # SR(data, producer)

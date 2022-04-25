@@ -21,7 +21,7 @@ def run_fp_growth(sales_df, producer):
     model.transform(sales_df).show()
 
 
-def plotLineItemAmount(data_df):
+def plot_line_item_amount(data_df):
     results = data_df.groupby("transaction_date").sum().sort("transaction_date")
     dates = range(1, 30)
     values = np.array(results.select("sum(line_item_amount)").collect()).reshape(-1)

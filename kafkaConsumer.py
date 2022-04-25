@@ -1,5 +1,6 @@
 from kafka import KafkaConsumer
 from json import loads
+
 consumer = KafkaConsumer(
     'results',
     bootstrap_servers=['kafka:9092', '0.0.0.0:9092', 'host.docker.internal:9092'],
